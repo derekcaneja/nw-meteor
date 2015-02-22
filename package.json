@@ -1,0 +1,15 @@
+{
+  "main": "index.html",
+  "name": "nw-meteor",
+  "description": "nw.js for meteor",
+  "version": "0.0.1",
+  "engine": "node >= 0.10.0",
+  "window": {
+    "title": "nw-meteor",
+    "toolbar": false,
+    "frame": true,
+    "position": "center",
+    "min_width": 400,
+    "min_height": 200
+  }
+}

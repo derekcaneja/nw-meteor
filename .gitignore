@@ -1,0 +1,4 @@
+*.DS_Store
+.scripts/lib
+.scripts/meteor
+.scripts/nwbuild

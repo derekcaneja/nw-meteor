@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>nw-meteor</title>
+
+    <style>
+      body {
+        background: rgb(238, 238, 238);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        overflow: hidden;
+      }
+      .circle {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0px;
+        margin: auto;
+        border: 4px solid rgb(191, 191, 191);
+        border-radius: 50%;
+      }
+      #vertical {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+        -webkit-animation: spin 3s linear infinite,pulse 1s linear infinite alternate;
+        animation: spin 3s linear infinite,pulse 1s linear infinite alternate;
+      }
+      .circle:not(#vertical) {
+        -webkit-animation: spin2 3s linear infinite,pulse 1s linear infinite alternate;
+        animation: spin2 3s linear infinite,pulse 1s linear infinite alternate;
+      }
+      @-webkit-keyframes spin {
+        100% {
+          -webkit-transform: rotate(450deg);
+          transform: rotate(450deg);
+        }
+      }
+      @-webkit-keyframes spin2 {
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes spin {
+        100% {
+          -webkit-transform: rotate(450deg);
+          transform: rotate(450deg);
+        }
+      }
+      @keyframes spin2 {
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @-webkit-keyframes pulse {
+        0% {
+          width: 5px;
+          height: 75px;
+        }
+        100% {
+          width: 40px;
+          height: 5px;
+        }
+        0% {
+          width: 5px;
+          height: 75px;
+        }
+      }
+      @keyframes pulse {
+        0% {
+          width: 5px;
+          height: 75px;
+        }
+        100% {
+          width: 40px;
+          height: 5px;
+        }
+        0% {
+          width: 5px;
+          height: 75px;
+        }
+      }
+    </style>
+
+    <script src="menu.js"></script>
+    <script>
+      var exec = require('child_process').exec;
+
+      var gui = require('nw.gui');
+
+      var Window = gui.Window.get();
+      Window.show();
+
+      createMenu();
+
+      // Start the meteor application
+      if (process.env.ENV === 'production') {
+        function onStartMeteor (error, stdout, stderr) {
+          if (stderr) throw new Error(stderr);
+        };
+
+        if (process.env.SETTINGS) {
+          exec("cd ./meteor-project && ../.scripts/meteor run --settings " + process.env.SETTINGS, onStartMeteor);
+        } else {
+          exec("cd ./meteor-project && ../.scripts/meteor run", onStartMeteor);
+        }
+      }
+
+      Window.on('close', function () {
+        exec("kill `ps ax | grep '[m]eteor' | awk '{print $1}'`");
+      });
+
+      // Point window to meteor server
+      function bodyOnLoad(){
+        if (process.env.ENV === 'production') {
+          window.setTimeout(function () {
+            window.location.assign('http://localhost:3000/');
+          }, 1000);
+        } else {
+          window.location.assign('http://localhost:3000/');
+        }
+      };
+    </script>
+  </head>
+  <body onload="bodyOnLoad()">
+    <div class='circle'></div>
+    <div class='circle' id='vertical'></div>
+  </body>
+</html>
