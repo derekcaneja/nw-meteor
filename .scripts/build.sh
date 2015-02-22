@@ -73,23 +73,37 @@ METEOR="$ROOT/meteor";
 cd $METEOR_PROJECT_DIR;
 
 # Build meteor project with proper settings
-echo '';
-echo 'Starting meteor and nw application...';
-echo '';
-
 if [ "$DEBUG_MODE" = true ]; then
+  echo '';
+  echo 'Starting meteor and nw application...';
+  echo '';
+
   if [ "$USE_SETTINGS" = true ]; then
     $METEOR run --settings $METEOR_SETTINGS &
   else
     $METEOR run &
   fi
 
+  export ENV=development;
   $NW_BUILDER -r $NW_METEOR_ROOT  1>/dev/null 2>&1
 else
-  if [ "$USE_SETTINGS" = true ]; then
-    export SETTINGS=$METEOR_SETTINGS
+  echo '';
+  echo 'Packaging meteor and nw application...';
+  echo '';
+
+  if [ ! -d "$NW_METEOR_ROOT/.release" ]; then
+    mkdir $NW_METEOR_ROOT/.release;
+  else
+    rm -rf $NW_METEOR_ROOT/.release;
+    mkdir $NW_METEOR_ROOT/.release;
   fi
 
-  export ENV=production
-  $NW_BUILDER -r $NW_METEOR_ROOT  1>/dev/null 2>&1
+  $NW_BUILDER -o $NW_METEOR_ROOT/.release $NW_METEOR_ROOT;
+
+  # Copy meteor files that got left behind in the bundling process
+  cp -a $METEOR_PROJECT_DIR/.meteor $NW_METEOR_ROOT/.release/nw-meteor/osx64/nw-meteor.app/Contents/Resources/app.nw/meteor-project/.meteor;
+  cp -a $ROOT/lib/meteor $NW_METEOR_ROOT/.release/nw-meteor/osx64/nw-meteor.app/Contents/Resources/app.nw/meteor;
+
+  # Copy icons for OSX
+  cp -a $NW_METEOR_ROOT/img/icon.icns $NW_METEOR_ROOT/.release/nw-meteor/osx64/nw-meteor.app/Contents/Resources/nw.icns;
 fi

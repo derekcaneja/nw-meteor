@@ -6,6 +6,7 @@
   "engine": "node >= 0.10.0",
   "window": {
     "title": "nw-meteor",
+    "icon": "/img/icon.png",
     "toolbar": false,
     "frame": true,
     "position": "center",

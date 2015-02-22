@@ -2,3 +2,4 @@
 .scripts/lib
 .scripts/meteor
 .scripts/nwbuild
+.release
